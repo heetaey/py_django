@@ -1,5 +1,4 @@
 {% load static %}
-{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
 <div class="container my-3">
     <h2 class="border-bottom py-2">{{ question.subject }}</h2>
@@ -39,7 +38,8 @@
     </div>
     {% endif %}
         <div class="form-group">
-            <textarea name="content" id="content" class="form-control" rows="10"></textarea>
+            <textarea {% if not user.is_authenticated %}disabled{% endif %}
+              name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
         <input type="submit" value="Post Answer" class="btn btn-primary">
     </form>
