@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 
 from .models import Question
 from .forms import QuestionForm, AnswerForm
@@ -65,3 +67,40 @@ def create_question(request):
         form = QuestionForm()
     context = {'form': form}
     return render(request, 'pybo/question_form.html', context)
+
+
+@login_required(login_url='common:login')
+def edit_question(request, question_id):
+    """
+    pybo edit question
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request, 'No permission to access')
+        return redirect('pybo:detail', question_id=question.id)
+
+    if request.method == "POST":
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user
+            question.modify_date = timezone.now()
+            question.save()
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        form = QuestionForm(instance=question)
+    context = {'form': form}
+    return render(request, 'pybo/question_form.html', context)
+
+
+@login_required(login_url='common:login')
+def delete_question(request, question_id):
+    """
+    pybo Delete post
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request, 'No permission to access')
+        return redirect('pybo:detail', question_id=question.id)
+    question.delete()
+    return redirect('pybo:index')
