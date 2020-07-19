@@ -11,5 +11,11 @@ urlpatterns = [
     path('question/modify/<int:question_id>/', views.edit_question, name='edit_question'),
     path('question/delete/<int:question_id>/', views.delete_question, name='delete_question'),
     path('answer/modify/<int:answer_id>/', views.edit_answer, name='edit_answer'),
-    path('answer/delete/<int:answer_id>/', views.delete_answer, name='delete_answer')
+    path('answer/delete/<int:answer_id>/', views.delete_answer, name='delete_answer'),
+    path('comment/create/question/<int:question_id>/', views.comment_create_question,
+         name='comment_create_question'),
+    path('comment/modify/question/<int:comment_id>/', views.comment_edit_question,
+         name='comment_edit_question'),
+    path('comment/delete/question/<int:comment_id>/', views.comment_delete_question,
+         name='comment_delete_question'),
 ]

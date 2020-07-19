@@ -25,6 +25,33 @@
                    data-uri="{% url 'pybo:delete_question' question.id  %}">Delete</a>
             </div>
             {% endif %}
+
+            <!-- Comment Section -->
+            {% if question.comment_set.count > 0 %}
+            <div class="mt-3">
+                {% for comment in question.comment_set.all %}
+                <div class="comment py-2 text-muted">
+                    <span style="white-space: pre-line;">{{ comment.content }}</span>
+                    <span>
+                - {{ comment.author }}, {{ comment.create_date }}
+                {% if comment.modify_date %}
+                (Edit:{{ comment.modify_date }})
+                {% endif %}
+            </span>
+                    {% if request.user == comment.author %}
+                    <a href="{% url 'pybo:comment_edit_question' comment.id  %}"
+                       class="small">Edit</a>,
+                    <a href="#" class="small delete"
+                       data-uri="{% url 'pybo:comment_delete_question' comment.id  %}">Delete</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div>
+                <a href="{% url 'pybo:comment_create_question' question.id  %}"
+                   class="small"><small>Add comments...</small></a>
+            </div>
         </div>
     </div>
     <h5 class="border-bottom my-3 py-2">Replies</h5>
@@ -52,24 +79,24 @@
                    data-uri="{% url 'pybo:delete_answer' answer.id  %}">Delete</a>
             </div>
             {% endif %}
-            </div>
+        </div>
     </div>
     {% endfor %}
     <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
         {% csrf_token %}
         {% if form.errors %}
         <div class="alert alert-danger" role="alert">
-        {% for field in form %}
+            {% for field in form %}
             {% if field.errors %}
             <strong>{{ field.label }}</strong>
             {{ field.errors }}
             {% endif %}
-        {% endfor %}
+            {% endfor %}
         </div>
         {% endif %}
         <div class="form-group">
             <textarea {% if not user.is_authenticated %}disabled{% endif %}
-              name="content" id="content" class="form-control" rows="10"></textarea>
+                      name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
         <input type="submit" value="submit" class="btn btn-primary">
     </form>
@@ -84,5 +111,6 @@ $(document).ready(function(){
         }
     });
 });
+
 </script>
 {% endblock %}
