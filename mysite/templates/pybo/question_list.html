@@ -2,11 +2,20 @@
 {% load pybo_filter %}
 {% block content %}
 <div class="container my-3">
-    <div class="row justify-content-end my-3">
+    <div class="row justify-content-between my-3">
+        <div class="col-2">
+            <select class="form-control so">
+                <option value="recent" {% if so == 'recent' %}selected{% endif %}>Latest</option>
+                <option value="recommend" {% if so == 'recommend' %}selected{% endif %}>Most
+                Voted</option>
+                <option value="popular" {% if so == 'popular' %}selected{% endif %}>Popular</option>
+            </select>
+        </div>
         <div class="col-4 input-group">
             <input type="text" class="form-control kw" value="{{ kw|default_if_none:'' }}">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+                <button class="btn btn-outline-secondary" type="button" id="btn_search">Search
+                </button>
             </div>
         </div>
     </div>
@@ -92,6 +101,7 @@
     <form id="searchForm" method="get" action="{% url 'index' %}">
         <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
         <input type="hidden" id="page" name="page" value="{{ page }}">
+        <input type="hidden" id="so" name="so" value="{{ so }}">
     </form>
 </div>
 {% endblock %}
@@ -105,6 +115,12 @@ $(document).ready(function(){
 
     $("#btn_search").on('click', function() {
         $("#kw").val($(".kw").val());
+        $("#page").val(1);
+        $("#searchForm").submit();
+    });
+
+    $(".so").on('change', function() {
+        $("#so").val($(this).val());
         $("#page").val(1);
         $("#searchForm").submit();
     });
