@@ -88,3 +88,10 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+
+
+.idea
+db.sqlite3
+*.pyc
+__pycache__
+logs

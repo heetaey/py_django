@@ -4,11 +4,15 @@ from django.db.models import Q, Count
 
 from ..models import Question
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def index(request):
     """
     Load pybo list
     """
+    logger.info("Display as INFO level")
 
     page = request.GET.get('page', '1')
     kw = request.GET.get('kw', '') # Keyword for searching
